@@ -88,13 +88,15 @@ namespace Quote
 
             var selectedServicesCodes = !string.IsNullOrEmpty(request.selectedServices) ? request.selectedServices.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
             var activityServices = this.GetTourActivityService(activity.Activity, request.Language);
+
+            var baseSelectedQuote = new TourQuote();
             if (selectedServicesCodes.Any())
             {
                 activityServices = activityServices.Where(ts => selectedServicesCodes.Contains(ts.ServiceCode)).ToList();
                 tourQuotes = tourQuotes.Where(w => selectedServicesCodes.Contains(w.ContractService.ServiceCode)).ToList();
+                baseSelectedQuote = tourQuotes.FirstOrDefault();
             }
 
-            var baseSelectedQuote = tourQuotes.First();
             var margin = .25;
             TourCalculatedQuote calculatedQuote = null;
             if (request.RetrieveOptions.GetCalculatedQuote)
